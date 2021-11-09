@@ -1,5 +1,22 @@
 {
     "cSpell.ignoreWords": [
         "displaystyle"
+    ],
+    "cSpell.words": [
+        "arccos",
+        "arcsin",
+        "arctan",
+        "bmatrix",
+        "doteq",
+        "iiint",
+        "infty",
+        "leftarrow",
+        "leftrightarrow",
+        "overrightarrow",
+        "pmatrix",
+        "rightarrow",
+        "simeq",
+        "subseteq",
+        "vmatrix"
     ]
 }
