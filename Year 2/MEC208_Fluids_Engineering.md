@@ -52,6 +52,31 @@ So, dimensionless groups always:
 
 <img src="images/2021-11-10-05-00-47.png" >
 
+### 1b Some Dimensionless groups
+
+(From the LBOTF) We will look at a couple of these on this course
+
+![](images/2021-11-11-06-35-01.png)
+
+#### Reynolds number
+
+The Reynolds number is
+$$
+\begin{aligned}
+ \\ Re = \frac{\rho Cd}{\mu}
+\end{aligned}
+$$
+
+This is
+![](images/2021-11-11-06-37-15.png)
+$$
+\begin{aligned}
+ \\ Re=\frac{\rho Cd}{\mu}=\frac{ML^{-3}\times LT^{-1}\times L}{ML^{-1}T^{-1}}=\frac{ML^{-1}T^{-1}}{ML^{-1}T^{-1}}=1
+\end{aligned}
+$$
+So it is dimensionless!
+
+
 
 
 
