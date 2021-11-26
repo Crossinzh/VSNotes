@@ -270,7 +270,58 @@ re模块中我们只需要记住这么几个功能就足够我们使用了。
 
 关于正则. 还有一个重要的小点也非常的简单，在本节中就不继续扩展了，下一借的案例中会把这个小点进行简单的介绍。
 
- 
+---
+
+## 4.案例 
+
+### 案例1 豆瓣250
+
+1. 使用requests get爬取代码
+2. 使用正则 re模块提取内容
+3. 存入csv
+
+代码：
+
+```python {.line-numbers}
+import requests
+import re
+import csv
+
+url = "XXX"
+
+headers = {
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36"
+}
+
+resp = requests.get(url, headers= headers )
+resp.close()
+
+result = re.compile(r'<div class="item">.*?<span class="title">(?P<name>.*?)</span>.*?'
+                    r'<div class="bd">.*?<br>(?P<year>.*?)&nbsp;.*?'
+                    r'<div class="star">.*?average">(?P<rate>.*?)</span>.*?'
+                    r'<span>(?P<number>.*?)</span>',re.S)
+
+it = result.finditer(resp.text)
+
+f = open("data.csv",mode="w",encoding="utf-8")
+csvwriter = csv.writer(f)
+
+for i in it:
+    # print(i.group("name"))
+    # print(i.group("year").strip())
+    # print(i.group("rate"))
+    # print(i.group("number"))
+    # print("-"*10)
+
+    dic = i.groupdict()
+    dic['year'] = dic['year'].strip()
+    csvwriter.writerow(dic.values())
+
+f.close()
+```
+
+### 案例2 电影天堂
+
 
 
 
