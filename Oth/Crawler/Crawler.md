@@ -322,7 +322,117 @@ f.close()
 
 ### 案例2 电影天堂
 
+- 定位到2020必看片
+- 从2020必看片中提取到子页面的链接地址
+- 请求子页面的链接地址，拿到我们想要的下载地址
+- 存入csv
 
+```python {.line-numbers}
+import requests
+import re
+import csv
+
+url = "XXX"
+
+headers = {
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36"
+}
+
+resp = requests.get(url, headers=headers)   # verify=False 去掉安全验证
+resp.encoding = 'gb2312'
+resp.close()
+
+obj1 = re.compile(r"2021必看热片.*?<ul>(?P<ul>.*?)</ul>",re.S)
+obj2 = re.compile(r"<li><a href='(?P<li>.*?)'",re.S)
+obj3 = re.compile(r'<title>(?P<title>.*?)</title>.*?<td style="WORD-WRAP: break-word" bgcolor="#fdfddf"><a href="(?P<link>.*?)">',re.S)
+
+result1 = obj1.finditer(resp.text)
+child_href_list = []
+for i in result1:
+    #print(i.group('ul'))
+    ul = i.group("ul")
+
+    result2 = obj2.finditer(ul)
+    for i in result2:
+        #print(i.group('li'))
+        child_href = url + i.group('li').strip("/")
+        child_href_list.append(child_href)
+    
+f = open('movie_list2.csv',mode='w',encoding='utf-8')
+csvwriter = csv.writer(f)
+
+for i in child_href_list:
+
+    child_resp = requests.get(i,headers=headers)
+    child_resp.encoding='gb2312'
+    child_resp.close()
+
+    result3 = obj3.finditer(child_resp.text)
+    for i in result3:
+        dic = i.groupdict()
+        csvwriter.writerow(dic.values())
+
+f.close()
+
+```
+
+---
+
+## 5.解析前戏-Html语法规则
+
+**bs4解析-HTML语法**
+
+bs4解析比较简单，但是呢，首先你需要了解一丢丢的html只是，然后再去使用bs
+4去提取，逻辑和编写难度就会非常简单和清晰
+
+HTML(Hyper Text Markup Language)超文本标记语言，是我们编写网页的最基本也是最核心的一种语言，其语法规则就是用不同的标签对网页上的内容进行标注，从而是网页显示出不同的展示效果。
+
+```html {.line-numbers}
+<h1>
+    我爱你
+</h1>
+```
+上述代码的含义是在页面中显示'我爱你'三个字，但是我爱你三个字被\<h1>和\</h1>标记了，白话就是被括起来了，被H1这个标签括起来了。这个时候，浏览器在展示的时候就会让**我爱你**变粗变大，俗称**标题**，所以HTML的语法就是用类似这样的标签对页面内容进行标记，不同的标签表现出来的效果也是不一样的。
+``` 
+1 h1: 一级标题
+2 h2: 二级标题
+3 p： 段落
+4 font： 字体(被弃用了，但能用)
+5 body:  主体
+```
+
+接下来就是属性了
+
+```html {.line-numbers}
+<h1>
+    我爱你
+</h1>
+<h1 align='right'>
+    我爱你妹
+</h1>
+```
+首先这两个标签都是h1标签，都是一级标题，但是下面这个会显示在右边 也就是说，通过xxx=xxx这种形式对h1标签进一步的说明了 那么这种语法在html中被称为标签的属性，并且这个属性可以有很多个，例如：
+```html {.line-numbers}
+<body text="green" bgcolor="#eee">
+    XXXX
+</body>
+```
+总结，html语法：
+```html {.line-numbers}
+<标签 属性='值' 属性='值'>
+    被标记的内容
+</标签>
+```
+有了这些知识，我们再去看bs4就会得心应手了，因为bs4就是通过标签和属性去定位网页上的内容的。
+
+
+---
+
+## 6.BS解析入门
+
+- 安装
+- pip install bs4 (直接安装)
+- pip install -i XXX (xxx源)
 
 
 
