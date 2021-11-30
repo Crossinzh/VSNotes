@@ -474,6 +474,175 @@ f.close()
 
 ---
 
+## 7 BS4解析案例-抓取优美图库图片
+
+```python {.line-numbers}
+# 1.拿到主页面的源代码，然后提取到子页面的连接地址，href
+# 2.通过href拿到子页面的内容，从子页面中找到图片的下载地址 img -> src
+# 3.下载图片
+
+import requests
+from bs4 import BeautifulSoup
+import time
+
+url = "xxx"
+headers = {"xx":"xxx"}
+resp = requests.get(url,headers=headers)
+resp.encoding = "utf-8"
+resp.close()
+
+# 把源代码交给bs
+main_page = BeautifulSoup(resp.text,"html.parser")
+alist = main_page.find("div",class_="TypeList").find_all("a")
+
+for a in alist:
+    href = a.get("href")    # 直接通过get就可以拿到属性的值
+    # 拿到子页面的源代码
+    child_page_resp = requests.get(url,headers)
+    child_page_resp.encoding = "utf-8"
+    child_page_text = child_page_resp.text
+    child_page_resp.close()
+    # 从子页面中拿到图片的下载路径
+    child_page = BeautifulSoup(child_page_text,"html.parser")
+    p = child_page.find("p",align="center")
+    img = p.find("img")
+    src = img.get("src")
+    # 下载图片
+    img_resp = requests(src,headers)
+    # img_resp.content  #这里拿到的是字节
+    img_name = src.split("/")[-1]
+    with open("images/"+img_name,mode="wb")as f:
+        f.write(img_resp.content)
+
+    print("over",img_name)
+    time.sleep(1)
+```
+
+---
+
+## 8.Xpath入门
+
+<div align='center'><img src='images/8_xpath_1.png'></div>
+
+---
+
+
+
+---
+## 3_1 Requests进阶概述
+
+我们在之前的爬虫中其实已经使用过headers了，headers为HTTP协议中的请求头，一般存放一些和请求内容无关的数据，有时也会存放一些安全验证信息，比如常见的User-Agent,token,cookie等。
+
+通过requests发送的请求，我们可以把请求头信息放在headers中，也可以单独进行存放，最终由requests自动帮我我们拼接成完整的http请求头。
+
+本章内容：
+
+1. 迷你浏览器登陆->处理cookie
+2. 防盗链处理->抓取梨视频数据
+3. 代理->防止被封IP
+
+综合训练：
+
+抓取网易云音乐评论信息
+
+---
+
+## 3_2 处理cookie 登录小说网
+
+
+```python {.line-numbers}
+
+# 登录 -> 得到cookie
+# 带着cookie 去请求到书架url -> 书架上的内容
+
+# 必须把上面的两个操作连起来
+# 我们可以使用session进行请求 -> session你可以认为是一连串的请求。在这个过程中的cookie不会丢失
+
+import requests
+
+headers = {
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36"
+}
+
+url = "XXX"
+
+data = {
+    "loginName": "XXX",
+    "password": "XXX"
+}
+
+# 会话
+session = requests.session()
+
+# 1.登录
+session.post(url,headers=headers,data=data)
+
+#print(resp.cookies)
+#print(resp.text)
+
+# 2.拿到书架上的数据
+# 刚才的那个session中是有cookie的
+
+resp = session.get("XXX")
+resp.close()
+
+print(resp.json())
+
+###
+
+resp = requests.get(url,headers={"Cookie": "GUID=24c30d19-7ad7-435f-a5f5-b8d7d069db65; BAIDU_SSP_lcr=http://www.baidu.com/link?url=wlrr0pmfUBWR08CNn0BRDY2_BWZUUrSckoNoj4Z59Xi&wd=&eqid=ae58e48d00130e5d0000000661a5470a; Hm_lvt_9793f42b498361373512340937deb2a0=1638221586; c_channel=0; c_csc=web; accessToken=avatarUrl%3Dhttps%253A%252F%252Fcdn.static.17k.com%252Fuser%252Favatar%252F13%252F73%252F46%252F86194673.jpg-88x88%253Fv%253D1638229470000%26id%3D86194673%26nickname%3D%25E4%25B9%25A6%25E5%258F%258Bvos28S1bo%26e%3D1653783026%26s%3Dbf2de04f087861eb; sensorsdata2015jssdkcross=%7B%22distinct_id%22%3A%2286194673%22%2C%22%24device_id%22%3A%2217d6d9d9d93255-03ac6d384c7193-978183a-2073600-17d6d9d9d94c8f%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E8%87%AA%E7%84%B6%E6%90%9C%E7%B4%A2%E6%B5%81%E9%87%8F%22%2C%22%24latest_referrer%22%3A%22http%3A%2F%2Fwww.baidu.com%2Flink%3Furl%3Dwlrr0pmfUBWR08CNn0BRDY2_BWZUUrSckoNoj4Z59Xi%26wd%3D%26eqid%3Dae58e48d00130e5d0000000661a5470a%22%2C%22%24latest_referrer_host%22%3A%22www.baidu.com%22%2C%22%24latest_search_keyword%22%3A%22%E6%9C%AA%E5%8F%96%E5%88%B0%E5%80%BC%22%7D%2C%22first_id%22%3A%2224c30d19-7ad7-435f-a5f5-b8d7d069db65%22%7D; Hm_lpvt_9793f42b498361373512340937deb2a0=1638231044"})
+
+print(resp.text) # 在headers中直接添加cookie
+
+```
+
+---
+
+## 3_3 防盗链 抓取梨视频
+
+
+
+```python {.line-numbers}
+# 1. 拿到contID
+# 2. 拿到videoStatus返回的json。 -> srcURL
+# 3. srcURL里面的内容进行修整
+# 4. 下载视频
+
+
+import requests
+
+# 拉取视频的网址
+url = "https://www.XXX.com/video_1746463"
+contId = url.split("_")[1]
+
+videoStatusUrl = f"https://www.XXX.com/videoStatus.jsp?contId={contId}&mrd=0.5829384196767642"
+
+headers = {
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36",
+    # 防盗链：溯源，当前本次请求的上一级是谁
+    "Referer": url
+}
+
+resp = requests.get(videoStatusUrl,headers=headers)
+resp.encoding= "utf-8"
+resp.close()
+
+#print(resp.text)
+
+dic = resp.json()
+systemTime = dic['systemTime']
+srcUrl = dic['videoInfo']['videos']['srcUrl']
+srcUrl = srcUrl.replace(systemTime,f"cont-{contId}")
+
+# 下载视频
+with open("a.mp4",mode="wb") as f:
+    f.write(requests.get(url=srcUrl).content)
+```
+
+---
+
+## 3_4 代理
+
 
 
 
