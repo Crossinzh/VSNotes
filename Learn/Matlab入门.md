@@ -415,3 +415,249 @@ switch...case...end
 
     ![](images/2022-02-12-16-30-10.png)
             
+
+***
+
+# 201 Matlab
+
+### M1 Matlab Familiarisation
+
+#### Matlab workspace basics
+- The command to generate a row vector called "x" containing the numbers 1,2,3
+`x = [1, 2, 3];`
+<br/>
+- Some basic Matlab syntax:
+`clear` -> clear all variables from the workspace
+`clear a*` -> clear only those starting with "a"
+`clc` -> clear writing off the workspace screen (nothing is lost from memory)
+`save('zz')` -> save workspace variables in Matlab format in a file called "zz"
+<br/>
+
+#### Matlab arithmetic
+- The usual symbols and rules for arithmetic functions apply
+`25+7*3-2^3/4` -> $25+(7\times3)-\frac{2^3}{4}$
+<br/>
+- You can do the same with variables
+```
+a = 25;
+b = 7;
+c = 3;
+d = 2;
+e = 4;
+a + b * c - d ^ c / e
+```
+<br/>
+
+- Complex numbers are handled correctly in arithmetic operations
+`x = 5+j*2` -> will set the real part of x as 5 and the imaginary part as 2
+`abs(x)` -> absolute value of x
+`angle(x)` -> phase angle associated with complex number x
+
+#### Matlab vectors and matrices
+
+- Matrices or vectors add and subtract element-by-element
+- The multiply and divide symbols define matrix operations. To get element-by-element operations use.
+`*` -> for multiplication
+`/` -> for division
+`^` -> for power
+<br/>
+- To identify elements within a matrix use the indices.
+`b = a(3,[2 4])` -> defines the variable b as a row vector[a(3,2) a(3,4)]
+In this context, the colon means "all", therefore a(:,3) would be the third column of matrix a.
+```
+a = ([1,2,3,4,5;6,7,8,9,10;11,12,13,14,15])
+b = a(3,[2 4])  -> output 12,14
+b = a(3,:)      -> output 11,12,13,14,15
+b = a(:,3)      -> output 3,8,13
+```
+<br/>
+
+- To get the transpose $B = A^T$ , type the following command `B = A'`
+<br/>
+
+- Vecor dot and cross products can be evaluated using the appropriate functions.
+```
+c = dot(a,b)
+d = cross(a,b)
+```
+
+#### Matlab scripts
+
+- For repetitive tasks, it is sometimes more convenient to put a list of commands together into a program called a Script. This is a text file whose name ends with .m and does not start with a number.
+<br/>
+- To run a script, type the name of the file (without the ending) into the workspace.
+    - For example, to run a script called antelope.m you would type antelope in the workspace.
+
+<br/>
+
+- Note that the script has to be in the Matlab current folder or in the workpath, for it to run.
+    - The current folder is shown at the top of the Command window
+    - The workpath can be changed using the "Enviroment" tab in the Command window
+
+#### Matlab functions (1)
+
+- A Function in Matlab is a Script that does not keep its variables in the workspace. Instead, it has define inputs and outputs.
+<br/>
+
+- It is useful in complex tasks with many intermediate steps when you do not want to fill up the workspace with lots of variables.
+<br/>
+
+- You can call the function from the workspace in the same way as a Scrpt, however in order to get any output to the workspace, you will have to define its inputs and outputs.
+<br/>
+
+  - To run it, in the workspace you might type `a = rand(5,2)`
+  - This will assign the variable "a" as a 5x2 matrix of random numbers overwriting any value of a that was previously in the workspace.
+
+#### Matlab function (2)
+
+- Inputs to a function can be numeric values or variable names that are in the workspace. You will get an error message if you try to run a function without giving it all the inputs that it is looking for.
+<br/>
+
+- Outputs are new variables that have names you choose. They do not have to have the same name as they have inside the function
+<br/>
+
+- Typing `doc` and the function name in the workspace will give you information on how to use the function
+  - e.g `doc plot` will explain how to use the `plot` command.
+<br/>
+
+- Information on any functions provided as part of MEC201 will be accessible in the same way.
+
+#### Matlab figures - basic commands
+
+- **The most common figure commands are ...**
+    `plot(x,y)` -> plot vector (or matrix) y against vector (or matrix) x.
+    `semilogy` -> same as plot but with log-scale on the y-axis.
+    `loglog(x,y)` -> same as plot woth log-scale on both axes.
+<br/>
+- **Figures in Matlab can be modified using the user-interface but it is often quicker to use written commands in the workspace or in a script/function.**
+    `plot (x1,y1,x2,y2)` -> plot two lines (or more) on the same graph
+    `plot (x,y,'.-')` -> specify the line type (chain in this case).
+    `xlabel('zzz')` -> add the label "zzz" to the x-axis, same format for ylabel
+    `legend('aa','bb')` -> add a legend to the graph ; here the first line is called aa and the second bb
+
+    <div align = center>
+
+    <img src = 'images/2022-02-20-17-07-38.png' height = 150>
+
+    </div>
+
+
+    `clf` -> clear everything off the figure
+    `grid on` -> include a grid (and grid off to remove)
+
+    <div align = center>
+    
+    <img src = 'images/2022-02-20-17-13-30.png' height = 150>
+    </div>
+
+    `axis([a b c d])` -> x-axis ranges from a to b and y axis ranges from c to d
+
+    <div align = center>
+
+    
+    <img src = 'images/2022-02-20-17-16-58.png' height = 150>
+    </div>
+
+#### Matlab figures - useful commands
+
+- Matlab plots figures with very thin lines. You may want to make them thicker for reports and presentrations. Use the command below ...
+
+    - `set(get(gca,'Children'),'LineWidth',2)`
+    `get(gca,'Children)'` -> gets the reference numbers for all the lines in the current axis
+    `'LineWidth',2` -> defines thickness of the line
+    <div align = center>
+    <img src = 'images/2022-02-20-17-43-47.png' height = 150>
+    </div>
+
+    - To export a figure for use in an application like MS Powerpoint, first get what you want on the screen. Next tell Matlab that the image you want is what you see.
+    `set(gcf,'PaperPositionMode','auto')`
+
+    - Finally make an image file in the format you want
+    `print XXX -dpng -r300`
+    xxx -> name you want to give the figure
+    -dpng -> image file format, could also have gif, tiff, jpg ...
+    -r300 -> image resolution in dots per inch
+
+---
+
+### M2 Matlab Activity - Signals
+
+#### MEC201 Week 1: Signals 
+
+The Fourier Transform can be used to move between time and frequency domains. Looking at a signal in the frequency domain often provides useful additional information about it.
+
+Special functions: `ft_forward`,`ft_inverse`
+
+**Activity 1:**
+
+Signal based on two sinusoids $x = sin(\omega_1t+\phi_1)+0.5sin(\omega_2t), \omega_1 = 2,\omega_2=10,\phi_1=\frac{\pi}{4}$
+<br/>
+
+```
+t = linspace(0,4,500);      -> Creat a vector with 500 time points between 0 and 4 seconds
+x = cos(2*pi*2*t+pi/4)+0.5*cos(2*pi*10*t);      -> Construct the signal
+plot(t,x) , grid on     -> Plot the signal and add a grid
+[whz, X] = ft_forward(t,x);     -> Generate and view the Fourier Transform
+plot(whz,abs(X),'o-')
+axis([0 15 0 1.5])      -> Zoom in on the peaks
+[t1,x1] = ft_inverse(whz,x);        -> Inverse transform to check forward-backward transform consistency
+plot(t,x,t1,x1,'.')
+
+```
+
+#### MEC201 Week 1: More signals
+
+Create some different signals and use the Fourier Transform to investigate them 
+Special function: `create_force_signal`
+
+**Activity 2**
+
+Investigate a square wave and a half-sine shock
+
+```
+[ti,fi] = create_force_signal(4,1024,4,3,5);    -> Create a 5 Hz square wave with amplitude 3 N over 4 seconds Plot the signal
+plot(ti,fi), xlabel('time, s')      -> Plot the signal
+ft_forward(ti,fi)   -> View the Fourier Transform
+[ti,fi] = create_force_signal(5,512,3,2,0.05);      -> Create a 3 second signal starting with a half-sine shock of 2 N peak, 0.05 s shock duration
+plot(ti,fi), xlabel('time,s')       -> Plot the signal
+ft_forward(ti,fi);      -> View the Fourier Transform
+```
+
+---
+
+### M3 Matlab Activity - Free Vibration
+
+#### MEC201 Week 2: Free vibration
+
+The free vibration response is affected by the system properities and the initial conditions. Investigate the effects that these have for a system like the one seen in the lab.
+
+Special function: `sdof_free_sys`
+
+**Activity**
+Nominal system properties: $m=0.7kg,k=2900N/m,c=0.45Ns/m$
+```
+wnhz = sqrt(2900/0.7)/2/pi;     -> Calculate system properties
+zeta = 0.45/2/sqrt(2900*0.7);
+sdof_free_sys(wnhz,zeta,0.01,0,6);      -> View the free vibration response following a 10 mm initial deflection
+[t,x] = sdof_free_sys(wnhz,zeta,0.01,0,6);      -> Calculate the free vibration response following a 10mm initial deflection
+ft_forward(t,x);        -> View the Fourier Transform
+```
+---
+
+
+
+
+---
+
+# 附_其他
+
+### Matlab 添加包
+下载zip 解压 -> 主页 -> 路径设置 添加即可
+
+<div align = center>
+<img src = 'images/2022-02-20-19-24-18.png' height = 100>
+</div>
+
+
+
+

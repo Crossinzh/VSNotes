@@ -727,7 +727,68 @@ if __name__ == "__main__":
         print("主线程",i)
 ```
 
+**方法三**
+
+```python {.line-numbers}
+from threading import Thread
+
+def func(name):
+    for i in range(1000):
+        print(name,i)
+
+if __name__ == "__main__":
+    t1 = Thread(target=func,args=("1",))    # 传递参数必须是元组
+    t1.start()
+
+    t2 = Thread(target=func,args=("2",))
+    t2.start()
+
+```
+
 ---
+
+## 4_3 多进程-1
+
+使用方法与线程类似
+
+```python {.line-numbers}
+from multiprocessing import Process
+
+def func():
+    for i in range(1000):
+        print("子进程",i)
+
+if __name__ == "__main__":
+    p = Process(target = func)
+    p.start()
+    for i in range(1000):
+        print("主进程",i)
+
+
+```
+
+***
+
+## 4_4 线程池和进程池入门
+
+```python {.line-numbers}
+#线程池：一次性开辟一些进程。我们用户直接给线程池子提交任务。线程任务的调度交给线程池来完成
+from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
+
+def fn(name):
+    for i in range(1000):
+        print(name,i)
+
+if __name__ == "__main__":
+    # 创建线程池
+    with ThreadPoolExexutor(50) as t:
+        for i in range(100):
+            t.submit(fn,name = i)
+    # 等待线程池中的任务全部执行完毕。才能执行（守护）
+    print("finish") 
+
+```
+
 
 
 
