@@ -14,7 +14,7 @@
 * Code Spell Checker
 * Vscode Icons
 
-点击插件面板，搜索 ```Markdown-Note Pack```,点击 ```Install``` 安装。
+点击插件面板，搜索 ```Markdown-Notes-Pack```,点击 ```Install``` 安装。
 
 <div align = center><img src="images/Screenshot from 2021-12-25 06-22-17.png" width=500></div>
 

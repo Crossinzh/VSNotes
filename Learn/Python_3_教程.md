@@ -988,7 +988,7 @@ dict(sape=4139, guido=4127, jack=4098)
 
 ### 遍历技巧
 
-在字典中遍历时，关键字和对应的值可以使用 items() 方法同时解读出来：
+在字典中遍历时，关键字和对应的值可以使用 <a href=#items>items</a> 方法同时解读出来：
 
 
 <br>
@@ -1065,7 +1065,7 @@ print('\n\nPython 路径为：', sys.path, '\n')
 <br>
 
 - 1、import sys 引入 python 标准库中的 sys.py 模块；这是引入某一模块的方法
-- 2、sys.argv 是一个包含命令行参数的列表。
+- 2、<a href=#sys_argv>sys.argv</a> 是一个包含命令行参数的列表。
 - 3、sys.path 包含了一个 Python 解释器自动查找所需模块的路径的列表。
 
 <br>
@@ -1587,8 +1587,243 @@ print('常量 PI 的近似值为：{}'.format(math.pi))
 ```
 可选项 `:` 和格式标识符可以跟着字段名。这就允许对值进行更好的格式化。下面的例子将 Pi 保留到小数点后三位：
 ```python {.line-numbers}
+import math
+print('常量 PI 的值近似为 {0：.3f}。'.format(math.pi))
+```
+```
+常量 PI 的值近似为 3.142。
+```
+
+在 `:` 后传入一个整数，可以保证该域至少有咋么多的宽度。用于美化表格时很有用。
+```python {.line-numbers}
+table = {'Google': 1,'Baidu': 2,'Sougo': 3}
+for name, number in table.items():
+    print('{0:10} ==> {1:10d}'.format(name, number))
+```
+```
+Goodgle   ==>         1
+Baidu     ==>         2
+Sougo     ==>         3
+```
+ps: <a href=#items>items</a>
+
+如果你有一个很长的格式化字符串，而你不想将它们分开，那么在格式化时通过变量名儿非位置会是很好的事情。
+最简单的就是传入一个字典，然后使用方括号 `[]` 来访问键值：
+```python {.line-numbers}
+table = {'Google': 1, 'Baidu':2 ,'Sougo':3}
+print('Baidu: {0[Baidu]:d}; Sougo:{0[Sougo]:d}; Google:{0[Google]:d}')
+```
+```
+Baidu: 2; Sougo: 3; Google: 1
+```
+也可以通过在 table 变量钱使用 `**` 来实现相同的功能：
+
+```python {.line-number}
+table = {'Google': 1, 'Baidu':2 ,'Sougo':3}
+print('Baidu: {Baidu:d}; Sougo:{Sougo:d}; Google:{Google:d}'.format(**table))
+```
+```
+Baidu:2;Sougo:3;Google:1
+```
+
+<br>
+
+### 旧式字符串格式化
+
+`%` 操作符也可以实现字符串格式化。它将左边的参数作为类似 **sprintf()** 式的格式化字符串，而将右边的代入，然后返回格式化后的字符串。例如：
+
+```python {.line-numbers}
+import math
+print('常量 PI 的值近似为: %5.3f。'%math.pi)
+```
+```
+常量 PI 的值近似为：3.142。
+```
+因为 str.format() 是比较新的函数，大多数的 PYthon 代码仍然使用 % 操作符。但是因为这种旧式的格式化最终会从该语言中移除，应该更多的使用 str.format()。
+
+<br>
+
+### 读取键盘输入
+
+Python 提供了 input() 内置函数从标准输入读入一行文本，默认的标注你输入是键盘。
+```python {.line-numbers}
+str = input("Please enter:")
+print("You`ve entered :", str)
+```
+
+<br>
+
+### 读和写文件
+
+open() 将会返回一个 file 对象，基本语法格式如下：
+```
+open(filename, mode)
+```
+
+- filename: 包含了你要访问的文件名称的字符串值
+- mode：决定了打开文件的模式：只读，写入，追加等。所有可取值键如下的完全列表。这个参数是非强制性的，默认问价能访问模式为只读 (r)。
+  
+不同模式打开文件的完全列表：
+
+模式 ==> 描述
+
+- r 
+  - 以只读方式打开文件。文件的指针将会放在文件的开头。这是默认模式。
+- rb
+  - 以二进制格式打开一个文件用于只读。文件指针将会放在文件的开头。
+- r+
+  - 打开一个文件用于读写。文件指针将会放在文件的开头。
+- rb+
+  - 以二进制格式打开一个文件用于读写。文件指针将会放在文件的开头。
+- w
+  - 打开一个文件只用于写入。如果该文件已存在而打开文件，并从开头开始编辑，即原有内容会被删除。如果该文件不存在，创建新文件。
+- wb
+  - 以二进制格式打开一个文件只用于写入。如果该文件已存在则打开文件，并从开头开始编辑，即原有内容会被删除。如果该文件不存在，创建新文件。
+- w+
+  - 打开一个文件用于读写。如果该文件已存在则打开文件，并从开头开始编辑，即原有内容会被删除。如果该文件不存在，穿件新文件。
+- wb+
+  - 以二进制格式打开一个文件用于读写。如果该文件已存在则打开文件，并从开头开始编辑，即原有内容会被删除。如果该文件不存在，创建新文件。
+- a
+  - 打开一个文件用于追加。如果该文件已经存在，文件指针将会放在文件的结尾。也就是说，新的内容将会被写入到已有内容之后。如果该文件不存在，创建新文件进行写入。
+- ab
+  - 以二进制格式打开一个文件用于追加。如果该文件已存在，文件指针将会放在文件的结尾。也就是说，新的内容将会被写入到已有内容之后。如果该文件不存在，创建新文件进行写入。
+- a+  
+  - 打开一个文件用于读写。如果该文件已存在，文件指针将会放在问价你的结尾。文件打开时会是追加模式。如果该文件不存在，创建新文件用于读写。
+- ab+
+  - 以二进制格式打开一个文件用于追加。如果该文件已存在，文件指针将会放在文件的结尾。如果该文件不存在，创建新文件用于读写。
+
+下图很好的总结了这几种模式：
+
+![](images/2022-07-05-15-43-44.png)
+
+![](images/2022-07-05-15-44-10.png)
+
+
+以下实例将字符串写入到文件 foo.txt 中：
+```python {.line-numbers}
+# 打开一个文件
+f = open('/tmp/foo.txt','w')
+
+f.write("Python 是一个非常好的语言。 \n 是的，的确非常好！！\n")
+# 关闭打开的文件
+f.close()
+```
+
+- 第一个参数为要打开的文件名
+- 第二个参数描述文件如何使用的字符。mode 可以是 'r' 如果文件只读， 'w' 只用于写（如果存在同名文件则将被删除），和 'a' 用于追加文件内容；所写的任何数据都会被自动增加到末尾。 'r+' 同时用于读写。 mode 参数是可选的； 'r' 将是默认值。
+
+<br>
+
+### 文件对象的方法
+
+本节中剩下的例子假设已经创建了一个称为 f 的问价对象。
+
+#### f.read()
+
+为了读取一个文件的内容，调用 f.read(size), 这将读取一定数目的数据，然后作为字符串或字节对象返回。
+size 是一个可选的数字类型的参数。当 size 被忽略了或者为负，那么该文件的所有内容都将被读取并且返回。
+一下实例假定文件 foo.txt 已经存在（上面实例中已创建）：
+```python {.line-numbers}
+# 打开一个文件
+f = open('/tmp/foo.txt','r')
+str = f.read()
+print(str)
+# 关闭打开的文件
+f.close()
+```
+
+#### f.readline()
+
+f.readline() 会从文件中读取单独的一行。换行符为 '\n'。f.readline() 如果返回一个空字符串，说明已经读到最后一行。
+
+```python {.line-numbers}
+f = open('foo.txt','r')
+str = f.readline()
+print(str)
+f.close()
+```
+
+#### f.readlines()
+
+f.readlines() 将返回该文件中包含的所有行。
+如果设置可选参数 sizehint, 则读取指定长度的字节，并且将这些字节按行分割。
+
+```python {.line-numbers}
+f = open('foo.txt','r')
+str = f.readlines()
+print(str)
+f.close()
+```
+执行以上程序，输出结果为：
+```
+['Python 是一个非常好的语言。\n', ' 是的，的确非常好！！\n']
+```
+
+另一种方法是迭代一个文件对象然后读取每行：
+
+```python {.line-numbers}
+f = open('foo.txt','r')
+
+for line in f:
+    print(line,end='')
+
+f.close()
+```
+
+执行以上程序，输出结果为：
+```
+Python 是一个非常好的语言。
+  是的，的确非常好！！
+```
+这个方法很简单，但是并没有提供一个很好的控制。因为两者的处理机制不同买最好不要混用。
+
+<br>
+
+#### f.write()
+
+f.write(string) 将 string 写入到文件中，然后返回写入的字符数。
+
+```python {.line-numbers}
+f = open('foo.txt','w')
+num = f.write("Python 是一个非常好的语言。\n是的，的确非常好！！\n")
+print(num)
+f.close()
+```
+
+如果要写入一些不是字符串的东西，那么将需要先进行转换：
+```python {.line-numbers}
+f = open('foo.txt','w')
+
+value = ('www.xxx.com',14)
+s = str(value)
+f.write(s)
+f.close()
+```
+
+执行以上程序，写入内容为：
+```
+('www.xxx.com',14)
+```
+
+<br>
+
+#### f.tell()
+f.tell() 返回文件对象当前所处的位置，它是从文件开头开始算起的字节数。
+
+#### f.seek()
+如果要改变文件指针当前的位置，可以使用 f.seek(offset, from_what) 函数。
+from_what 的值，如果是 0 表示开头，如果是 1 表示当前位置，2 表示文件的结尾，例如：
+
+- seek(x,0): 从起始位置即文件首行首字符开始移动 x 个字符
+- seek(x,1): 表示从当前位置往后移动 x 个字符
+- seek(-x,2): 表示从文件的结尾往前移动 x 个字符
+
+from_what 值为默认为 0，即文件开头。下面给出一个完整的例子：
+
+```python {.line-numbers}
 
 ```
+
 
 
 
@@ -1599,3 +1834,147 @@ print('常量 PI 的近似值为：{}'.format(math.pi))
 ----
 
 ## <a id='mxdx' style='text-decoration:none'>Python3 面向对象</a>
+
+
+---
+
+## Ps: 各种出现方法笔记
+
+### <a id='items' style='text-decoration:none'>字典.items()方法</a>
+
+<a href=#items>items</a>
+
+<br>
+
+**描述**
+
+Python 字典 items() 方法以及列表返回视图对象，是一个可遍历的 key/value 对。
+dict.keys()、dict.values() 和 dict.items() 返回的都是视图对象 (view objects)，提供了字典实体的动态视图，这就意味着字典改变，视图也会跟着变化。
+视图对象不是列表，不支持索引，可以引用 list() 来转换为列表。
+我们不能对试图对象进行任何的修改，因为字典的视图对象都是只读的。
+
+**语法**
+items() 方法语法：
+```
+dict.items()
+```
+
+**参数**
+
+- NA.
+
+**返回值**
+
+返回可视图对象。
+
+**实例**
+
+一下展示了 items() 方法的使用方法：
+```python {.line-numbers}
+tinydict = {'Name': 'Xiaomin','Age':18}
+print('Value: %s' % tinydict.itesm())
+```
+```
+Value: dict_items([('name', 'xiaomin'), ('age', 18)])
+```
+
+遍历例子：
+
+```python {.line-numbers}
+tinydict = {'Xiaomin': 18,'Anny':17, 'Sansun':20}
+for name, age in tinydict.items():
+    print('Name: {0:10}, Age:{1:10d}'.format(name, age))
+```
+```
+name: Xiaomin   , age:        18
+name: Anny      , age:        17
+name: Sansun    , age:        20
+```
+
+将字典的 key 和 value 组成一个新的列表：
+
+```python {.line-numbers}
+tinydict = {'Xiaomin': 18,'Anny':17, 'Sansun':20}
+result=[]
+for name, age in tinydict.items():
+    result.append(name)
+    result.append(age)
+
+print(result)
+```
+```
+['Xiaomin', 18, 'Anny', 17, 'Sansun', 20]
+```
+
+
+
+
+---
+
+<br>
+
+
+### <a id='sys_argv'>详解Python sys.argv使用方法</a>
+
+sys.argv 是 python 用来获取命令行参数的，如在 CMD 下执行 python *.py data, 也就是使用 python 执行脚本时，需要添加的参数
+按照 Python 教程中的做法
+
+**编写 using_sys.py**
+
+```python {.line-numbers}
+import sys
+print('the command line arguments are:')
+for i in sys.argv:
+    print(i)
+print('\n\nthe PythonPATH is', sys.path, '\n')
+```
+
+**在 CMD/Terminal 中执行脚本**
+
+先是只执行python using_sys.py
+
+```
+python using_sys.py
+```
+
+<br>
+<div align=center>
+<img src="images/2022-07-05-16-24-40.png" height=150>
+<div>执行结果</div>
+</div>
+<br>
+<br>
+
+然后，添加一些参数
+```
+python using_sys.py helloworld
+```
+
+再查看一下结果：
+
+
+<br>
+<div align=center>
+<img src="images/2022-07-05-16-26-50.png" height=150>
+<div>执行结果</div>
+</div>
+<br>
+<br>
+
+<br>
+
+接下来分析一下：首先 import sys 是导入模块，这就是告诉 python，我们可以使用sys模块，而sys模块包含了与python解释器和它的环境有关的函数
+
+其次，当python执行 import sys 语句的时候，它在 sys.path 变量中所列目录中寻找 sys.py 模块，如果找到了这个文件，这个模块的主块中的语句被运行，然后这个模块能够将你使用。
+
+sys.argv 表示 sys模块中的argv变量，实际上，sys.argv 是一个字符串的列表，其中包含了命令行参数的列表，即使用命令行传递给你的程序的参数。
+
+特别注意：脚本的名称总是 sys.argv列表的第一个参数，而在命令行脚本后的参数是 sys.argv列表中的第二个元素，而参数之间以空格区分。
+
+最后就是 sys.path 包含了输入模块的目录名列表，sys.path 的第一个字符串式脚本当前的路径。
+
+---
+
+<br>
+
+
